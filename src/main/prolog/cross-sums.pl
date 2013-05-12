@@ -1,13 +1,3 @@
-do_following_sequence(11, [2,1], [9,2], 0).
-do_following_sequence(11, [9,2], [8,3], 0).
-do_following_sequence(11, [8,3], [7,4], 0).
-do_following_sequence(11, [7,4], [6,5], 0).
-do_following_sequence(11, [6,5], [5,6], 0).
-do_following_sequence(11, [5,6], [4,7], 0).
-do_following_sequence(11, [4,7], [3,8], 0).
-do_following_sequence(11, [3,8], [2,9], 0).
-do_following_sequence(11, [2,9], [9,2], 1).
-
 cross_sum(X_CONSTRAINTS, Y_CONSTRAINTS, POSITION) :- 
 	repeat, 
 	generate_position(X_CONSTRAINTS, POSITION),
@@ -35,11 +25,11 @@ do_list_of_one([CONSTRAINT_LINE_HEAD | CONSTRAINT_LINE_TAIL], LIST, ELEMENT, ACC
 	do_list_of_one(CONSTRAINT_LINE_TAIL, LIST, NEW_ELEMENT, [ELEMENT | ACCUMULATOR]).
 do_list_of_one([CONSTRAINT_LINE_HEAD | CONSTRAINT_LINE_TAIL], NEW_LIST, _, ACCUMULATOR) :- 
 	CONSTRAINT_LINE_HEAD =\= 0,
-	append_element(ACCUMULATOR, 0, TEMP_LIST),
+	append_element(ACCUMULATOR, CONSTRAINT_LINE_HEAD + 0, TEMP_LIST),
 	append(TEMP_LIST, LIST, NEW_LIST),
 	do_list_of_one(CONSTRAINT_LINE_TAIL, LIST, 1, []).
 
-iterate_following_list(FIRST_LIST, FOLLOWING_LIST, CONSTRAINT_LINE) :- following_list(CONSTRAINT_LINE, FIRST_LIST, FOLLOWING_LIST).
+iterate_following_list(FIRST_LIST, FIRST_LIST, _).
 iterate_following_list(FIRST_LIST, FOLLOWING_LIST, CONSTRAINT_LINE) :- 
 	following_list(CONSTRAINT_LINE, FIRST_LIST, ITERATE_LIST), iterate_following_list(ITERATE_LIST, FOLLOWING_LIST, CONSTRAINT_LINE).
 
@@ -51,13 +41,13 @@ do_following_list(NEEDED_SUM, PLACEHOLDER_LIST, _, [], FOLLOWING_SEQUENCE) :-
 do_following_list(NEEDED_SUM, PLACEHOLDER_LIST, [CONSTRAINT_LINE_HEAD | _], [_ | LIST_TAIL], FOLLOWING_LIST) :- 
 	CONSTRAINT_LINE_HEAD =\= 0,
 	do_following_sequence(NEEDED_SUM, PLACEHOLDER_LIST, FOLLOWING_SEQUENCE, 0),
-	append_element(FOLLOWING_SEQUENCE, 0, TEMPORARY_SEQUENCE),
+	append_element(FOLLOWING_SEQUENCE, CONSTRAINT_LINE_HEAD + 0, TEMPORARY_SEQUENCE),
 	append(TEMPORARY_SEQUENCE, LIST_TAIL, FOLLOWING_LIST).	
 do_following_list(NEEDED_SUM, PLACEHOLDER_LIST, [CONSTRAINT_LINE_HEAD | CONSTRAINT_LINE_TAIL], [_ | LIST_TAIL], FOLLOWING_LIST) :- 
 	CONSTRAINT_LINE_HEAD =\= 0,
 	do_following_sequence(NEEDED_SUM, PLACEHOLDER_LIST, FOLLOWING_SEQUENCE, 1),
 	do_following_list(CONSTRAINT_LINE_HEAD, [], CONSTRAINT_LINE_TAIL, LIST_TAIL, FOLLOWING_LIST_TAIL),
-	append_element(FOLLOWING_SEQUENCE, 0, TEMPORARY_SEQUENCE),
+	append_element(FOLLOWING_SEQUENCE, CONSTRAINT_LINE_HEAD + 0, TEMPORARY_SEQUENCE),
 	append(TEMPORARY_SEQUENCE, FOLLOWING_LIST_TAIL, FOLLOWING_LIST).	
 do_following_list(NEEDED_SUM, PLACEHOLDER_LIST, [CONSTRAINT_LINE_HEAD | CONSTRAINT_LINE_TAIL], [LIST_HEAD | LIST_TAIL], FOLLOWING_LIST) :- 
 	CONSTRAINT_LINE_HEAD = 0,
@@ -66,6 +56,16 @@ do_following_list(NEEDED_SUM, PLACEHOLDER_LIST, [CONSTRAINT_LINE_HEAD | CONSTRAI
 	
 append_element([], ELEMENT, [ELEMENT]).
 append_element([LIST_HEAD | LIST_TAIL], ELEMENT, [LIST_HEAD | APPEND_TAIL]) :- append_element(LIST_TAIL, ELEMENT, APPEND_TAIL).
+
+do_following_sequence(11, [2,1], [9,2], 0).
+do_following_sequence(11, [9,2], [8,3], 0).
+do_following_sequence(11, [8,3], [7,4], 0).
+do_following_sequence(11, [7,4], [6,5], 0).
+do_following_sequence(11, [6,5], [5,6], 0).
+do_following_sequence(11, [5,6], [4,7], 0).
+do_following_sequence(11, [4,7], [3,8], 0).
+do_following_sequence(11, [3,8], [2,9], 0).
+do_following_sequence(11, [2,9], [9,2], 1).
 
 do_following_sequence(_, [], [], 1) .
 do_following_sequence(NEEDED_SUM, [9 | SEQUENCE_TAIL], [1 | FOLLOWING_TAIL], LAST_SEQUENCE) :- do_following_sequence(NEEDED_SUM, SEQUENCE_TAIL, FOLLOWING_TAIL, LAST_SEQUENCE).
