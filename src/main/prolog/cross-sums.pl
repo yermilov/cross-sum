@@ -1,32 +1,30 @@
+do_following_sequence(11, [2,1], [9,2], 0).
+do_following_sequence(11, [9,2], [8,3], 0).
+do_following_sequence(11, [8,3], [7,4], 0).
+do_following_sequence(11, [7,4], [6,5], 0).
+do_following_sequence(11, [6,5], [5,6], 0).
+do_following_sequence(11, [5,6], [4,7], 0).
+do_following_sequence(11, [4,7], [3,8], 0).
+do_following_sequence(11, [3,8], [2,9], 0).
+do_following_sequence(11, [2,9], [9,2], 1).
+
 cross_sum(X_CONSTRAINTS, Y_CONSTRAINTS, POSITION) :- 
-	generate_all_positions(X_CONSTRAINTS, ALL_POSITIONS),
-	generate_next_position(ALL_POSITIONS, POSITION),
-	format('~n~w~n', [POSITION]),
+	repeat, 
+	generate_position(X_CONSTRAINTS, POSITION),
+	format('POSSITION MAP: ~w~n', [POSITION]),
 	fit_vertical_constraints(Y_CONSTRAINTS, POSITION).
 
-generate_all_positions([_ | X_CONSTRAINTS_TAIL], ALL_POSITIONS) :- do_generate_all_positions(X_CONSTRAINTS_TAIL, ALL_POSITIONS).
+generate_position([_ | X_CONSTRAINTS_TAIL], POSITION) :- do_generate_position(X_CONSTRAINTS_TAIL, POSITION, 1).
 
-do_generate_all_positions([], []).
-do_generate_all_positions([X_CONSTRAINTS_HEAD | X_CONSTRAINTS_TAIL], [ALL_POSITIONS_HEAD | ALL_POSITIONS_TAIL]) :-
-	list_of_one(X_CONSTRAINTS_HEAD, FIRST_POSITION_LINE),
-	generate_all_positions_for_one_line(X_CONSTRAINTS_HEAD, FIRST_POSITION_LINE, ALL_POSITIONS_HEAD),
-	do_generate_all_positions(X_CONSTRAINTS_TAIL, ALL_POSITIONS_TAIL).
-
-generate_all_positions_for_one_line(X_CONSTRAINT_LINE, FIRST_POSITION_LINE, [POSITION_LINE | ALL_POSITIONS_LINE_TAIL]) :- 
-	iterate_following_list(FIRST_POSITION_LINE, POSITION_LINE, X_CONSTRAINT_LINE),
-	format('     POSITION: ~w~n', [POSITION_LINE]),
-	fit_one_line_constraints(X_CONSTRAINT_LINE, POSITION_LINE),
-	format('GOOD POSITION: ~w~n', [POSITION_LINE]),
-	generate_all_positions_for_one_line(X_CONSTRAINT_LINE, POSITION_LINE, ALL_POSITIONS_LINE_TAIL).
-generate_all_positions_for_one_line(_, _, []).
-
-generate_next_position([], []).
-generate_next_position([ALL_POSITIONS_HEAD | ALL_POSITIONS_TAIL], [ONE_LINE_POSITION | POSITION_TAIL]) :- 
-	generate_one_line_position(ALL_POSITIONS_HEAD, ONE_LINE_POSITION),
-	generate_next_position(ALL_POSITIONS_TAIL, POSITION_TAIL).
-	
-generate_one_line_position([ALL_POSITIONS_LINE_HEAD | _], ALL_POSITIONS_LINE_HEAD).
-generate_one_line_position([_ | ALL_POSITIONS_LINE_TAIL], ONE_LINE_POSITION) :- generate_one_line_position(ALL_POSITIONS_LINE_TAIL, ONE_LINE_POSITION).
+do_generate_position([], [], _).
+do_generate_position([CONSTRAINTS_HEAD | CONSTRAINTS_TAIL], [POSITION_HEAD | POSITION_TAIL], INDEX) :- 
+	list_of_one(CONSTRAINTS_HEAD, FIRST_POSITION_HEAD),
+	iterate_following_list(FIRST_POSITION_HEAD, POSITION_HEAD, CONSTRAINTS_HEAD),
+	format('POSSITION LINE #~w: ~w~n', [INDEX, POSITION_HEAD]),
+	fit_one_line_constraints(CONSTRAINTS_HEAD, POSITION_HEAD),
+	format('HORIZONTAL POSSITION LINE #~w: ~w~n', [INDEX, POSITION_HEAD]),
+	NEW_INDEX is INDEX + 1,
+	do_generate_position(CONSTRAINTS_TAIL, POSITION_TAIL, NEW_INDEX).
 	
 list_of_one([_ | CONSTRAINT_LINE_TAIL], LIST_OF_ONE) :- do_list_of_one(CONSTRAINT_LINE_TAIL, LIST_OF_ONE, 1, []).
 
@@ -68,16 +66,6 @@ do_following_list(NEEDED_SUM, PLACEHOLDER_LIST, [CONSTRAINT_LINE_HEAD | CONSTRAI
 	
 append_element([], ELEMENT, [ELEMENT]).
 append_element([LIST_HEAD | LIST_TAIL], ELEMENT, [LIST_HEAD | APPEND_TAIL]) :- append_element(LIST_TAIL, ELEMENT, APPEND_TAIL).
-	
-do_following_sequence(11, [2,1], [9,2], 0).
-do_following_sequence(11, [9,2], [8,3], 0).
-do_following_sequence(11, [8,3], [7,4], 0).
-do_following_sequence(11, [7,4], [6,5], 0).
-do_following_sequence(11, [6,5], [5,6], 0).
-do_following_sequence(11, [5,6], [4,7], 0).
-do_following_sequence(11, [4,7], [3,8], 0).
-do_following_sequence(11, [3,8], [2,9], 0).
-do_following_sequence(11, [2,9], [9,2], 1).
 
 do_following_sequence(_, [], [], 1) .
 do_following_sequence(NEEDED_SUM, [9 | SEQUENCE_TAIL], [1 | FOLLOWING_TAIL], LAST_SEQUENCE) :- do_following_sequence(NEEDED_SUM, SEQUENCE_TAIL, FOLLOWING_TAIL, LAST_SEQUENCE).
