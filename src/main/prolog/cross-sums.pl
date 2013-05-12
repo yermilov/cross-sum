@@ -28,10 +28,18 @@ generate_next_position([ALL_POSITIONS_HEAD | ALL_POSITIONS_TAIL], [ONE_LINE_POSI
 generate_one_line_position([ALL_POSITIONS_LINE_HEAD | _], ALL_POSITIONS_LINE_HEAD).
 generate_one_line_position([_ | ALL_POSITIONS_LINE_TAIL], ONE_LINE_POSITION) :- generate_one_line_position(ALL_POSITIONS_LINE_TAIL, ONE_LINE_POSITION).
 	
-list_of_one([_ | CONSTRAINT_LINE_TAIL], LIST_OF_ONE) :- do_list_of_one(CONSTRAINT_LINE_TAIL, LIST_OF_ONE, 1).
+list_of_one([_ | CONSTRAINT_LINE_TAIL], LIST_OF_ONE) :- do_list_of_one(CONSTRAINT_LINE_TAIL, LIST_OF_ONE, 1, []).
 
-do_list_of_one([], [], _).
-do_list_of_one([_ | TAIL], [1 | LIST], E) :- do_list_of_one(TAIL, LIST, E).
+do_list_of_one([], LIST, _, LIST).
+do_list_of_one([CONSTRAINT_LINE_HEAD | CONSTRAINT_LINE_TAIL], LIST, ELEMENT, ACCUMULATOR) :- 
+	CONSTRAINT_LINE_HEAD = 0,
+	NEW_ELEMENT is ELEMENT + 1,
+	do_list_of_one(CONSTRAINT_LINE_TAIL, LIST, NEW_ELEMENT, [ELEMENT | ACCUMULATOR]).
+do_list_of_one([CONSTRAINT_LINE_HEAD | CONSTRAINT_LINE_TAIL], NEW_LIST, _, ACCUMULATOR) :- 
+	CONSTRAINT_LINE_HEAD =\= 0,
+	append_element(ACCUMULATOR, 0, TEMP_LIST),
+	append(TEMP_LIST, LIST, NEW_LIST),
+	do_list_of_one(CONSTRAINT_LINE_TAIL, LIST, 1, []).
 
 iterate_following_list(FIRST_LIST, FOLLOWING_LIST, CONSTRAINT_LINE) :- following_list(CONSTRAINT_LINE, FIRST_LIST, FOLLOWING_LIST).
 iterate_following_list(FIRST_LIST, FOLLOWING_LIST, CONSTRAINT_LINE) :- 
@@ -61,6 +69,16 @@ do_following_list(NEEDED_SUM, PLACEHOLDER_LIST, [CONSTRAINT_LINE_HEAD | CONSTRAI
 append_element([], ELEMENT, [ELEMENT]).
 append_element([LIST_HEAD | LIST_TAIL], ELEMENT, [LIST_HEAD | APPEND_TAIL]) :- append_element(LIST_TAIL, ELEMENT, APPEND_TAIL).
 	
+do_following_sequence(11, [2,1], [9,2], 0).
+do_following_sequence(11, [9,2], [8,3], 0).
+do_following_sequence(11, [8,3], [7,4], 0).
+do_following_sequence(11, [7,4], [6,5], 0).
+do_following_sequence(11, [6,5], [5,6], 0).
+do_following_sequence(11, [5,6], [4,7], 0).
+do_following_sequence(11, [4,7], [3,8], 0).
+do_following_sequence(11, [3,8], [2,9], 0).
+do_following_sequence(11, [2,9], [9,2], 1).
+
 do_following_sequence(_, [], [], 1) .
 do_following_sequence(NEEDED_SUM, [9 | SEQUENCE_TAIL], [1 | FOLLOWING_TAIL], LAST_SEQUENCE) :- do_following_sequence(NEEDED_SUM, SEQUENCE_TAIL, FOLLOWING_TAIL, LAST_SEQUENCE).
 do_following_sequence(_, [SEQUENCE_HEAD | SEQUENCE_TAIL], [FOLLOWING_HEAD | SEQUENCE_TAIL], 0) :- SEQUENCE_HEAD < 9, FOLLOWING_HEAD is SEQUENCE_HEAD + 1.
