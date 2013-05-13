@@ -58,8 +58,16 @@ append_element([], ELEMENT, [ELEMENT]).
 append_element([LIST_HEAD | LIST_TAIL], ELEMENT, [LIST_HEAD | APPEND_TAIL]) :- append_element(LIST_TAIL, ELEMENT, APPEND_TAIL).
 
 do_following_sequence(11, [2,1], [9,2], 0) :- !.
+
+do_following_sequence(8, [2,1], [7,1], 0) :- !.
+do_following_sequence(8, [1,7], [7,1], 1) :- !.
+do_following_sequence(8, [E1,E2], [F1,F2], 0) :- !, F1 is E1 - 1, F2 is E2 + 1.
+
 do_following_sequence(21, [E1, E2, E3, E4, E5, E6], FOLLOWING_SEQUENCE, LAST_SEQUENCE) 
 	:- !, following_commutation([], [E1, E2, E3, E4, E5, E6], FOLLOWING_SEQUENCE, LAST_SEQUENCE).
+
+do_following_sequence(35, [E1, E2, E3, E4, E5], FOLLOWING_SEQUENCE, LAST_SEQUENCE) 
+	:- !, following_commutation([], [E1, E2, E3, E4, E5], FOLLOWING_SEQUENCE, LAST_SEQUENCE).
 
 do_following_sequence(_, [], [], 1) .
 do_following_sequence(NEEDED_SUM, [9 | SEQUENCE_TAIL], [1 | FOLLOWING_TAIL], LAST_SEQUENCE) :- do_following_sequence(NEEDED_SUM, SEQUENCE_TAIL, FOLLOWING_TAIL, LAST_SEQUENCE).
