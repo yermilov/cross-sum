@@ -11,7 +11,7 @@ do_generate_position([CONSTRAINTS_HEAD | CONSTRAINTS_TAIL], [POSITION_HEAD | POS
 	first_position_list(CONSTRAINTS_HEAD, FIRST_POSITION_HEAD),
 	format('SEARCHING AT LINE #~w: ~w~n', [INDEX, CONSTRAINTS_HEAD]),
 	iterate_following_list(FIRST_POSITION_HEAD, POSITION_HEAD, CONSTRAINTS_HEAD),
-	/*format('POSSITION LINE #~w: ~w~n', [INDEX, POSITION_HEAD]),*/
+	format('POSSITION LINE #~w: ~w~n', [INDEX, POSITION_HEAD]),
 	fit_one_line_constraints(CONSTRAINTS_HEAD, POSITION_HEAD),
 	format('HORIZONTAL POSSITION LINE #~w: ~w~n', [INDEX, POSITION_HEAD]),
 	NEW_INDEX is INDEX + 1,
@@ -60,16 +60,27 @@ append_element([LIST_HEAD | LIST_TAIL], ELEMENT, [LIST_HEAD | APPEND_TAIL]) :- a
 
 do_following_sequence(11, [2,1], [9,2], 0) :- !.
 
+do_following_sequence(7, [2,1], [6,1], 0) :- !.
+do_following_sequence(7, [1,6], [6,1], 1) :- !.
+do_following_sequence(7, [E1,E2], [F1,F2], 0) :- !, E1 > 1, F1 is E1 - 1, F2 is E2 + 1.
+
 do_following_sequence(8, [2,1], [7,1], 0) :- !.
 do_following_sequence(8, [1,7], [7,1], 1) :- !.
 do_following_sequence(8, [E1,E2], [F1,F2], 0) :- !, E1 > 1, F1 is E1 - 1, F2 is E2 + 1.
 
+do_following_sequence(18, [1,1,1], [9,8,1], 0) :- !.
+do_following_sequence(18, [3,2,1], [9,8,1], 0) :- !.
+
 do_following_sequence(21, [E1, E2, E3, E4, E5, E6], FOLLOWING_SEQUENCE, LAST_SEQUENCE) 
 	:- !, following_commutation([], [E1, E2, E3, E4, E5, E6], FOLLOWING_SEQUENCE, LAST_SEQUENCE).
+
+do_following_sequence(24, [5,4,3,2,1], [9,8,4,2,1], 0) :- !.
 
 do_following_sequence(35, [5, 4, 3, 2, 1], [9, 8, 7, 6, 5], 0).
 do_following_sequence(35, [E1, E2, E3, E4, E5], FOLLOWING_SEQUENCE, LAST_SEQUENCE) 
 	:- !, following_commutation([], [E1, E2, E3, E4, E5], FOLLOWING_SEQUENCE, LAST_SEQUENCE).
+	
+do_following_sequence(40, [7,6,5,4,3,2,1], [9,8,7,6,5,4,1], 0) :- !.
 
 do_following_sequence(_, [], [], 1) .
 do_following_sequence(NEEDED_SUM, [9 | SEQUENCE_TAIL], [1 | FOLLOWING_TAIL], LAST_SEQUENCE) :- do_following_sequence(NEEDED_SUM, SEQUENCE_TAIL, FOLLOWING_TAIL, LAST_SEQUENCE).
