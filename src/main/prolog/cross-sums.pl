@@ -66,6 +66,7 @@ do_following_sequence(8, [E1,E2], [F1,F2], 0) :- E1 > 1, !, F1 is E1 - 1, F2 is 
 do_following_sequence(21, [E1, E2, E3, E4, E5, E6], FOLLOWING_SEQUENCE, LAST_SEQUENCE) 
 	:- !, following_commutation([], [E1, E2, E3, E4, E5, E6], FOLLOWING_SEQUENCE, LAST_SEQUENCE).
 
+do_following_sequence(35, [5, 4, 3, 2, 1], [9, 8, 7, 6, 5], 0).
 do_following_sequence(35, [E1, E2, E3, E4, E5], FOLLOWING_SEQUENCE, LAST_SEQUENCE) 
 	:- !, following_commutation([], [E1, E2, E3, E4, E5], FOLLOWING_SEQUENCE, LAST_SEQUENCE).
 
