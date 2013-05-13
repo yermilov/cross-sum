@@ -9,6 +9,7 @@ generate_position([_ | X_CONSTRAINTS_TAIL], POSITION) :- do_generate_position(X_
 do_generate_position([], [], _).
 do_generate_position([CONSTRAINTS_HEAD | CONSTRAINTS_TAIL], [POSITION_HEAD | POSITION_TAIL], INDEX) :- 
 	first_position_list(CONSTRAINTS_HEAD, FIRST_POSITION_HEAD),
+	format('SEARCHING AT LINE #~w~n', [INDEX, POSITION_HEAD]),
 	iterate_following_list(FIRST_POSITION_HEAD, POSITION_HEAD, CONSTRAINTS_HEAD),
 	/*format('POSSITION LINE #~w: ~w~n', [INDEX, POSITION_HEAD]),*/
 	fit_one_line_constraints(CONSTRAINTS_HEAD, POSITION_HEAD),
