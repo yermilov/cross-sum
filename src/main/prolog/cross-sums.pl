@@ -11,7 +11,7 @@ do_generate_position([CONSTRAINTS_HEAD | CONSTRAINTS_TAIL], [POSITION_HEAD | POS
 	first_position_list(CONSTRAINTS_HEAD, FIRST_POSITION_HEAD),
 	format('SEARCHING AT LINE #~w: ~w~n', [INDEX, CONSTRAINTS_HEAD]),
 	iterate_following_list(FIRST_POSITION_HEAD, POSITION_HEAD, CONSTRAINTS_HEAD),
-	format('POSSITION LINE #~w: ~w~n', [INDEX, POSITION_HEAD]),
+	/*format('POSSITION LINE #~w: ~w~n', [INDEX, POSITION_HEAD]),*/
 	fit_one_line_constraints(CONSTRAINTS_HEAD, POSITION_HEAD),
 	format('HORIZONTAL POSSITION LINE #~w: ~w~n', [INDEX, POSITION_HEAD]),
 	NEW_INDEX is INDEX + 1,
@@ -83,8 +83,10 @@ do_following_sequence(35, [E1, E2, E3, E4, E5], FOLLOWING_SEQUENCE, LAST_SEQUENC
 do_following_sequence(40, [7,6,5,4,3,2,1], [9,8,7,6,5,4,1], 0) :- !.
 
 do_following_sequence(_, [], [], 1) .
-do_following_sequence(NEEDED_SUM, [9 | SEQUENCE_TAIL], [1 | FOLLOWING_TAIL], LAST_SEQUENCE) :- do_following_sequence(NEEDED_SUM, SEQUENCE_TAIL, FOLLOWING_TAIL, LAST_SEQUENCE).
-do_following_sequence(_, [SEQUENCE_HEAD | SEQUENCE_TAIL], [FOLLOWING_HEAD | SEQUENCE_TAIL], 0) :- SEQUENCE_HEAD < 9, FOLLOWING_HEAD is SEQUENCE_HEAD + 1.
+do_following_sequence(_, [9 | SEQUENCE_TAIL], [1 | FOLLOWING_TAIL], LAST_SEQUENCE) :- 
+	do_following_sequence(-1, SEQUENCE_TAIL, FOLLOWING_TAIL, LAST_SEQUENCE).
+do_following_sequence(_, [SEQUENCE_HEAD | SEQUENCE_TAIL], [FOLLOWING_HEAD | SEQUENCE_TAIL], 0) :- 
+	SEQUENCE_HEAD < 9, FOLLOWING_HEAD is SEQUENCE_HEAD + 1.
 
 following_commutation(ACCUMULATOR, [], FOLLOWING_COMMUTATION, 1) :- 
 	sort_list(ACCUMULATOR, FOLLOWING_COMMUTATION).
