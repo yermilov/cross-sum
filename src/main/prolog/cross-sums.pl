@@ -41,11 +41,28 @@ do_generate_position_for_line(NEEDED_SUM, [CONSTRAINT_LINE_HEAD | CONSTRAINT_LIN
 
 /*
  */
-generate_position_for_sequence(5, 2, POSITION_SEQUENCE) :- !, do_generate_position_for_sequence(5, 2, POSITION_SEQUENCE).
+generate_position_for_sequence(7, 2, POSITION_SEQUENCE) :- !, do_generate_position_for_sequence(7, 2, POSITION_SEQUENCE).
+generate_position_for_sequence(7, 3, POSITION_SEQUENCE) :- !, do_generate_position_for_sequence(7, 3, POSITION_SEQUENCE).
+generate_position_for_sequence(8, 2, POSITION_SEQUENCE) :- !, do_generate_position_for_sequence(8, 2, POSITION_SEQUENCE).
+generate_position_for_sequence(8, 3, POSITION_SEQUENCE) :- !, do_generate_position_for_sequence(8, 3, POSITION_SEQUENCE).
+generate_position_for_sequence(10, 4, POSITION_SEQUENCE) :- !, do_generate_position_for_sequence(10, 4, POSITION_SEQUENCE).
+generate_position_for_sequence(11, 2, POSITION_SEQUENCE) :- !, do_generate_position_for_sequence(11, 2, POSITION_SEQUENCE).
+generate_position_for_sequence(14, 2, POSITION_SEQUENCE) :- !, do_generate_position_for_sequence(14, 2, POSITION_SEQUENCE).
+generate_position_for_sequence(15, 5, POSITION_SEQUENCE) :- !, do_generate_position_for_sequence(15, 5, POSITION_SEQUENCE).
+generate_position_for_sequence(16, 5, POSITION_SEQUENCE) :- !, do_generate_position_for_sequence(16, 5, POSITION_SEQUENCE).
+generate_position_for_sequence(18, 3, POSITION_SEQUENCE) :- !, do_generate_position_for_sequence(18, 3, POSITION_SEQUENCE).
+generate_position_for_sequence(20, 5, POSITION_SEQUENCE) :- !, do_generate_position_for_sequence(20, 5, POSITION_SEQUENCE).
+generate_position_for_sequence(21, 6, POSITION_SEQUENCE) :- !, do_generate_position_for_sequence(21, 6, POSITION_SEQUENCE).
+generate_position_for_sequence(24, 5, POSITION_SEQUENCE) :- !, do_generate_position_for_sequence(24, 5, POSITION_SEQUENCE).
+generate_position_for_sequence(28, 7, POSITION_SEQUENCE) :- !, do_generate_position_for_sequence(28, 7, POSITION_SEQUENCE).
+generate_position_for_sequence(29, 5, POSITION_SEQUENCE) :- !, do_generate_position_for_sequence(29, 5, POSITION_SEQUENCE).
+generate_position_for_sequence(29, 7, POSITION_SEQUENCE) :- !, do_generate_position_for_sequence(29, 7, POSITION_SEQUENCE).
+generate_position_for_sequence(32, 5, POSITION_SEQUENCE) :- !, do_generate_position_for_sequence(32, 5, POSITION_SEQUENCE).
+generate_position_for_sequence(35, 5, POSITION_SEQUENCE) :- !, do_generate_position_for_sequence(35, 5, POSITION_SEQUENCE).
+generate_position_for_sequence(40, 7, POSITION_SEQUENCE) :- !, do_generate_position_for_sequence(40, 7, POSITION_SEQUENCE).
+generate_position_for_sequence(45, 9, POSITION_SEQUENCE) :- !, do_generate_position_for_sequence(45, 9, POSITION_SEQUENCE).
 
-generate_position_for_sequence(-1, SEQUENCE_SIZE, POSITION_SEQUENCE) :- !,
-	format("WARN : DON'T KNOW COMMUTATIONS FOR SEQUENCE WITH ANY SUM OF ~w ELEMENTS~n", [SEQUENCE_SIZE]),
-	generate_ordered_combination(SEQUENCE_SIZE, POSITION_SEQUENCE).
+generate_position_for_sequence(-1, SEQUENCE_SIZE, POSITION_SEQUENCE) :- !, generate_ordered_combination(SEQUENCE_SIZE, POSITION_SEQUENCE).
 
 generate_position_for_sequence(NEEDED_SUM, SEQUENCE_SIZE, POSITION_SEQUENCE) :- 
 	format("WARN : DON'T KNOW COMMUTATIONS FOR SEQUENCE WITH SUM ~w OF ~w ELEMENTS~n", [NEEDED_SUM, SEQUENCE_SIZE]),
@@ -54,8 +71,85 @@ generate_position_for_sequence(NEEDED_SUM, SEQUENCE_SIZE, POSITION_SEQUENCE) :-
 	
 /*
  */
-do_generate_position_for_sequence(5, 2, COMMUTATION) :- generate_commutation([1,4], 2, COMMUTATION).
-do_generate_position_for_sequence(5, 2, COMMUTATION) :- generate_commutation([2,3], 2, COMMUTATION).
+do_generate_position_for_sequence(7, 2, COMMUTATION) :- generate_commutation([1,6], 2, COMMUTATION).
+do_generate_position_for_sequence(7, 2, COMMUTATION) :- generate_commutation([2,5], 2, COMMUTATION).
+do_generate_position_for_sequence(7, 2, COMMUTATION) :- generate_commutation([3,4], 2, COMMUTATION).
+
+do_generate_position_for_sequence(7, 3, COMMUTATION) :- generate_commutation([1,2,4], 3, COMMUTATION).
+
+do_generate_position_for_sequence(8, 2, COMMUTATION) :- generate_commutation([1,7], 2, COMMUTATION).
+do_generate_position_for_sequence(8, 2, COMMUTATION) :- generate_commutation([2,6], 2, COMMUTATION).
+do_generate_position_for_sequence(8, 2, COMMUTATION) :- generate_commutation([3,5], 2, COMMUTATION).
+
+do_generate_position_for_sequence(8, 3, COMMUTATION) :- generate_commutation([1,2,5], 3, COMMUTATION).
+do_generate_position_for_sequence(8, 3, COMMUTATION) :- generate_commutation([1,3,4], 3, COMMUTATION).
+
+do_generate_position_for_sequence(10, 4, COMMUTATION) :- generate_commutation([1,2,3,4], 4, COMMUTATION).
+
+do_generate_position_for_sequence(11, 2, COMMUTATION) :- generate_commutation([2,9], 2, COMMUTATION).
+do_generate_position_for_sequence(11, 2, COMMUTATION) :- generate_commutation([3,8], 2, COMMUTATION).
+do_generate_position_for_sequence(11, 2, COMMUTATION) :- generate_commutation([4,7], 2, COMMUTATION).
+do_generate_position_for_sequence(11, 2, COMMUTATION) :- generate_commutation([5,6], 2, COMMUTATION).
+
+do_generate_position_for_sequence(14, 2, COMMUTATION) :- generate_commutation([5,9], 2, COMMUTATION).
+do_generate_position_for_sequence(14, 2, COMMUTATION) :- generate_commutation([6,8], 2, COMMUTATION).
+
+do_generate_position_for_sequence(15, 5, COMMUTATION) :- generate_commutation([1,2,3,4,5], 5, COMMUTATION).
+
+do_generate_position_for_sequence(16, 5, COMMUTATION) :- generate_commutation([1,2,3,4,6], 5, COMMUTATION).
+
+do_generate_position_for_sequence(18, 3, COMMUTATION) :- generate_commutation([1,8,9], 3, COMMUTATION).
+do_generate_position_for_sequence(18, 3, COMMUTATION) :- generate_commutation([2,7,9], 3, COMMUTATION).
+do_generate_position_for_sequence(18, 3, COMMUTATION) :- generate_commutation([3,6,9], 3, COMMUTATION).
+do_generate_position_for_sequence(18, 3, COMMUTATION) :- generate_commutation([3,7,8], 3, COMMUTATION).
+do_generate_position_for_sequence(18, 3, COMMUTATION) :- generate_commutation([4,5,9], 3, COMMUTATION).
+do_generate_position_for_sequence(18, 3, COMMUTATION) :- generate_commutation([4,6,8], 3, COMMUTATION).
+do_generate_position_for_sequence(18, 3, COMMUTATION) :- generate_commutation([5,6,7], 3, COMMUTATION).
+
+do_generate_position_for_sequence(20, 5, COMMUTATION) :- generate_commutation([1,2,3,5,9], 5, COMMUTATION).
+do_generate_position_for_sequence(20, 5, COMMUTATION) :- generate_commutation([1,2,3,6,8], 5, COMMUTATION).
+do_generate_position_for_sequence(20, 5, COMMUTATION) :- generate_commutation([1,2,4,5,8], 5, COMMUTATION).
+do_generate_position_for_sequence(20, 5, COMMUTATION) :- generate_commutation([1,2,4,6,7], 5, COMMUTATION).
+do_generate_position_for_sequence(20, 5, COMMUTATION) :- generate_commutation([1,3,4,5,7], 5, COMMUTATION).
+do_generate_position_for_sequence(20, 5, COMMUTATION) :- generate_commutation([2,3,4,5,6], 5, COMMUTATION).
+
+do_generate_position_for_sequence(21, 6, COMMUTATION) :- generate_commutation([1,2,3,4,5,6], 6, COMMUTATION).
+
+do_generate_position_for_sequence(24, 5, COMMUTATION) :- generate_commutation([1,2,4,8,9], 5, COMMUTATION).
+do_generate_position_for_sequence(24, 5, COMMUTATION) :- generate_commutation([1,2,5,7,9], 5, COMMUTATION).
+do_generate_position_for_sequence(24, 5, COMMUTATION) :- generate_commutation([1,2,6,7,8], 5, COMMUTATION).
+do_generate_position_for_sequence(24, 5, COMMUTATION) :- generate_commutation([1,3,4,7,9], 5, COMMUTATION).
+do_generate_position_for_sequence(24, 5, COMMUTATION) :- generate_commutation([1,3,5,6,9], 5, COMMUTATION).
+do_generate_position_for_sequence(24, 5, COMMUTATION) :- generate_commutation([1,3,5,7,8], 5, COMMUTATION).
+do_generate_position_for_sequence(24, 5, COMMUTATION) :- generate_commutation([1,4,5,6,8], 5, COMMUTATION).
+do_generate_position_for_sequence(24, 5, COMMUTATION) :- generate_commutation([2,3,4,6,9], 5, COMMUTATION).
+do_generate_position_for_sequence(24, 5, COMMUTATION) :- generate_commutation([2,3,4,7,8], 5, COMMUTATION).
+do_generate_position_for_sequence(24, 5, COMMUTATION) :- generate_commutation([2,3,5,6,8], 5, COMMUTATION).
+do_generate_position_for_sequence(24, 5, COMMUTATION) :- generate_commutation([2,4,5,6,7], 5, COMMUTATION).
+
+do_generate_position_for_sequence(28, 7, COMMUTATION) :- generate_commutation([1,2,3,4,5,6,7], 7, COMMUTATION).
+
+do_generate_position_for_sequence(29, 5, COMMUTATION) :- generate_commutation([1,4,7,8,9], 5, COMMUTATION).
+do_generate_position_for_sequence(29, 5, COMMUTATION) :- generate_commutation([1,5,6,8,9], 5, COMMUTATION).
+do_generate_position_for_sequence(29, 5, COMMUTATION) :- generate_commutation([2,3,7,8,9], 5, COMMUTATION).
+do_generate_position_for_sequence(29, 5, COMMUTATION) :- generate_commutation([2,4,6,8,9], 5, COMMUTATION).
+do_generate_position_for_sequence(29, 5, COMMUTATION) :- generate_commutation([2,5,6,7,9], 5, COMMUTATION).
+do_generate_position_for_sequence(29, 5, COMMUTATION) :- generate_commutation([3,4,5,8,9], 5, COMMUTATION).
+do_generate_position_for_sequence(29, 5, COMMUTATION) :- generate_commutation([3,4,6,7,9], 5, COMMUTATION).
+do_generate_position_for_sequence(29, 5, COMMUTATION) :- generate_commutation([3,5,6,7,8], 5, COMMUTATION).
+
+do_generate_position_for_sequence(29, 7, COMMUTATION) :- generate_commutation([1,2,3,4,5,6,8], 7, COMMUTATION).
+
+do_generate_position_for_sequence(32, 5, COMMUTATION) :- generate_commutation([2,6,7,8,9], 5, COMMUTATION).
+do_generate_position_for_sequence(32, 5, COMMUTATION) :- generate_commutation([3,5,7,8,9], 5, COMMUTATION).
+do_generate_position_for_sequence(32, 5, COMMUTATION) :- generate_commutation([4,5,6,8,9], 5, COMMUTATION).
+
+do_generate_position_for_sequence(35, 5, COMMUTATION) :- generate_commutation([5,6,7,8,9], 5, COMMUTATION).
+
+do_generate_position_for_sequence(40, 7, COMMUTATION) :- generate_commutation([1,4,5,6,7,8,9], 7, COMMUTATION).
+do_generate_position_for_sequence(40, 7, COMMUTATION) :- generate_commutation([2,3,5,6,7,8,9], 7, COMMUTATION).
+
+do_generate_position_for_sequence(45, 9, COMMUTATION) :- generate_commutation([1,2,3,4,5,6,7,8,9], 9, COMMUTATION).
 
 /*
  */
