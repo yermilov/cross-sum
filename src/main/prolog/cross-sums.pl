@@ -196,12 +196,12 @@ fit_vertical_constraints([[_ | Y_CONSTRAINTS_HEAD] | Y_CONSTRAINTS_TAIL], POSITI
  */
 is_fit_vertical_constraints([], [], POINTS_LEFT_LIST, _, SKIP_LIST) :- !, all_zeros(POINTS_LEFT_LIST, SKIP_LIST).
  
-is_fit_vertical_constraints(_, [], _, _, _).
+is_fit_vertical_constraints([CONSTRAINTS_HEAD | _], [], POINTS_LEFT_LIST, _, SKIP_LIST) :- !, check_last_available_vertical_constraints(CONSTRAINTS_HEAD, POINTS_LEFT_LIST, SKIP_LIST).
 
 is_fit_vertical_constraints([CONSTRAINTS_HEAD | CONSTRAINTS_TAIL], [POSITION_HEAD | POSITION_TAIL], POINTS_LEFT_LIST, USED_NUMBERS_LIST, SKIP_LIST) :- 
 	process_vertical_constraints(CONSTRAINTS_HEAD, POSITION_HEAD, POINTS_LEFT_LIST, USED_NUMBERS_LIST, SKIP_LIST, NEW_POINTS_LEFT_LIST, NEW_USED_NUMBERS_LIST, NEW_SKIP_LIST),
 	is_fit_vertical_constraints(CONSTRAINTS_TAIL, POSITION_TAIL, NEW_POINTS_LEFT_LIST, NEW_USED_NUMBERS_LIST, NEW_SKIP_LIST).
-
+	
 /*
  */
 process_vertical_constraints([_ | CONSTRAINTS_LINE_TAIL], POSITION_HEAD, POINTS_LEFT_LIST, USED_NUMBERS_LIST, SKIP_LIST, NEW_POINTS_LEFT_LIST, NEW_USED_NUMBERS_LIST, NEW_SKIP_LIST) :- 
@@ -267,6 +267,32 @@ do_process_vertical_constraints(
 	NEW_POINTS_LEFT_HEAD is POINTS_LEFT_HEAD - POSITON_LINE_HEAD,
 	do_process_vertical_constraints(CONSTRAINTS_LINE_TAIL, POSITON_LINE_TAIL, POINTS_LEFT_TAIL, USER_NUMBERS_TAIL, SKIP_LIST_TAIL, NEW_POINTS_LEFT_LIST, NEW_USED_NUMBERS_LIST, NEW_SKIP_LIST_TAIL).
 	
+/*
+ */
+check_last_available_vertical_constraints([_ | CONSTRAINTS_LINE_TAIL], POINTS_LEFT_LIST, SKIP_LIST) :-
+	do_check_last_available_vertical_constraints(CONSTRAINTS_LINE_TAIL, POINTS_LEFT_LIST, SKIP_LIST).
+	
+/*
+ */
+do_check_last_available_vertical_constraints([], _, _).
+
+do_check_last_available_vertical_constraints([CONSTRAINTS_LINE_HEAD | CONSTRAINTS_LINE_TAIL], [POINTS_LEFT_HEAD | POINTS_LEFT_TAIL], [SKIP_LIST_HEAD | SKIP_LIST_TAIL]) :- 
+	CONSTRAINTS_LINE_HEAD =\= 0, SKIP_LIST_HEAD > 0,
+	POINTS_LEFT_HEAD = 0,
+	do_check_last_available_vertical_constraints(CONSTRAINTS_LINE_TAIL, POINTS_LEFT_TAIL, SKIP_LIST_TAIL).
+
+do_check_last_available_vertical_constraints([CONSTRAINTS_LINE_HEAD | CONSTRAINTS_LINE_TAIL], [_ | POINTS_LEFT_TAIL], [SKIP_LIST_HEAD | SKIP_LIST_TAIL]) :- 
+	CONSTRAINTS_LINE_HEAD =\= 0, SKIP_LIST_HEAD =< 0,
+	do_check_last_available_vertical_constraints(CONSTRAINTS_LINE_TAIL, POINTS_LEFT_TAIL, SKIP_LIST_TAIL).
+
+do_check_last_available_vertical_constraints([CONSTRAINTS_LINE_HEAD | CONSTRAINTS_LINE_TAIL], [POINTS_LEFT_HEAD | POINTS_LEFT_TAIL], [SKIP_LIST_HEAD | SKIP_LIST_TAIL]) :- 
+	CONSTRAINTS_LINE_HEAD = 0, SKIP_LIST_HEAD > 0,
+	POINTS_LEFT_HEAD >= 0,
+	do_check_last_available_vertical_constraints(CONSTRAINTS_LINE_TAIL, POINTS_LEFT_TAIL, SKIP_LIST_TAIL).
+
+do_check_last_available_vertical_constraints([CONSTRAINTS_LINE_HEAD | CONSTRAINTS_LINE_TAIL], [_ | POINTS_LEFT_TAIL], [SKIP_LIST_HEAD | SKIP_LIST_TAIL]) :- 
+	CONSTRAINTS_LINE_HEAD = 0, SKIP_LIST_HEAD =< 0,
+	do_check_last_available_vertical_constraints(CONSTRAINTS_LINE_TAIL, POINTS_LEFT_TAIL, SKIP_LIST_TAIL).
 /*
  */
 generate_empty_list_list([], []).
