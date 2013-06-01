@@ -1,28 +1,50 @@
 /*
+ * cross_sum(HORIZONTAL_CONSTAINTS_MATRIX, VERTICAL_CONSTAINTS_MATRIX, POSITION_MATRIX).
+ *
+ * Solve the cross-sum problem.
+ *
+ * In input constaints positive number means corresponding needed sum, 0 means empty placeholder and -1 means empty cell or constaint with unknown sum.
+ *
+ * @input-param HORIZONTAL_CONSTAINTS_MATRIX - matrix of horizontal constaints.
+ * @input-param VERTICAL_CONSTAINTS_MATRIX - matrix of vertical constaints.
+ * @output-param POSITION_MATRIX - answer for cross-sum game.
  */
-cross_sum([_ | X_CONSTRAINTS_WITHOUT_HEADLINE], Y_CONSTRAINTS, POSITION) :- 
-	do_cross_sum(X_CONSTRAINTS_WITHOUT_HEADLINE, Y_CONSTRAINTS, POSITION),
-	format('INFO : POSITION FOR ALL CONSTRAINTS: ~w~n', [POSITION]).
-	
-/*
- */
-do_cross_sum(X_CONSTRAINTS_WITHOUT_HEADLINE, Y_CONSTRAINTS, POSITION) :- 
-	generate_position(X_CONSTRAINTS_WITHOUT_HEADLINE, Y_CONSTRAINTS, [], POSITION, 1).
+cross_sum([_ | HORIZONTAL_CONSTAINTS_MATRIX_TAILLINES], VERTICAL_CONSTAINTS_MATRIX, POSITION_MATRIX) :- 
+	generate_position_matrix_for_constaints(HORIZONTAL_CONSTAINTS_MATRIX_TAILLINES, VERTICAL_CONSTAINTS_MATRIX, [], 1, POSITION_MATRIX),
+	format('INFO : POSITION_MATRIX FOR ALL CONSTRAINTS: ~w~n', [POSITION_MATRIX]).
 
 /*
+ * generate_position_matrix_for_constaints(HORIZONTAL_CONSTAINTS_MATRIX, VERTICAL_CONSTAINTS_MATRIX, POSITION_MATRIX_ACCUMULATOR, LINE_INDEX, POSITION_MATRIX).
+ *
+ * Generates position matrix that fit passed horizontal and vertical constaints.
+ *
+ * Matrix of vertical constaints should not contain first empty line.
+ *
+ * @input-param HORIZONTAL_CONSTAINTS_MATRIX - matrix of horizontal constaints.
+ * @input-param VERTICAL_CONSTAINTS_MATRIX - matrix of vertical constaints.
+ * @input-param POSITION_MATRIX_ACCUMULATOR - matrix of already generated position lines.
+ * @input-param LINE_INDEX - number of currently calculated line.
+ * @output-param POSITION_MATRIX - answer for cross-sum game.
  */
-generate_position([], _, _, [], _).
+generate_position_matrix_for_constaints([], _, _, _, []).
 
-generate_position([X_CONSTRAINTS_HEADLINE | X_CONSTRAINTS_TAILLINE], Y_CONSTRAINTS, POSITION_ACCUMULATOR, [POSITION_HEADLINE | POSITION_TAILLINE], INDEX) :- 
-	generate_position_for_line(X_CONSTRAINTS_HEADLINE, POSITION_HEADLINE),
+generate_position_matrix_for_constaints(
+		[HORIZONTAL_CONSTAINTS_MATRIX_HEADLINE | HORIZONTAL_CONSTAINTS_MATRIX_TAILLINES],
+		VERTICAL_CONSTAINTS_MATRIX,
+		POSITION_MATRIX_ACCUMULATOR,
+		LINE_INDEX,
+		[POSITION_MATRIX_HEADLINE | POSITION_MATRIX_TAILLINES]
+	) :- 
+	generate_position_for_line(HORIZONTAL_CONSTAINTS_MATRIX_HEADLINE, POSITION_MATRIX_HEADLINE),
 	
-	append_element(POSITION_ACCUMULATOR, POSITION_HEADLINE, NEW_POSITION_ACCUMULATOR),
-	/*format('DEBUG: CHECK FOR VERTICALS: ~w~n', [NEW_POSITION_ACCUMULATOR]),*/
-	fit_vertical_constraints(Y_CONSTRAINTS, NEW_POSITION_ACCUMULATOR),
+	append_element(POSITION_MATRIX_ACCUMULATOR, POSITION_MATRIX_HEADLINE, NEW_POSITION_MATRIX_ACCUMULATOR),
+	fit_vertical_constraints(VERTICAL_CONSTAINTS_MATRIX, NEW_POSITION_MATRIX_ACCUMULATOR),
 	
-	format('INFO : POSITION FOR ~w PROCESSED LINES:~n ~w~n', [INDEX, NEW_POSITION_ACCUMULATOR]),
-	NEW_INDEX is INDEX + 1,
-	generate_position(X_CONSTRAINTS_TAILLINE, Y_CONSTRAINTS, NEW_POSITION_ACCUMULATOR, POSITION_TAILLINE, NEW_INDEX).
+	format('INFO : POSITION FOR ~w PROCESSED LINES:~n ~w~n', [LINE_INDEX, NEW_POSITION_MATRIX_ACCUMULATOR]),
+	NEW_LINE_INDEX is LINE_INDEX + 1,
+	generate_position_matrix_for_constaints(
+		HORIZONTAL_CONSTAINTS_MATRIX_TAILLINES, VERTICAL_CONSTAINTS_MATRIX, NEW_POSITION_MATRIX_ACCUMULATOR, NEW_LINE_INDEX, POSITION_MATRIX_TAILLINES
+	).
 	
 /*
  */
