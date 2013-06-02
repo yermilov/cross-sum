@@ -35,7 +35,7 @@ generate_position_matrix_for_constaints(
 		LINE_INDEX,
 		[POSITION_MATRIX_HEADLINE | POSITION_MATRIX_TAILLINES]
 	) :- 
-	generate_position_for_line(HORIZONTAL_CONSTAINTS_MATRIX_HEADLINE, POSITION_MATRIX_HEADLINE),
+	generate_position_line_for_horizontal_constraints(HORIZONTAL_CONSTAINTS_MATRIX_HEADLINE, POSITION_MATRIX_HEADLINE),
 	
 	append_element(POSITION_MATRIX_ACCUMULATOR, POSITION_MATRIX_HEADLINE, NEW_POSITION_MATRIX_ACCUMULATOR),
 	fit_vertical_constraints(VERTICAL_CONSTAINTS_MATRIX, NEW_POSITION_MATRIX_ACCUMULATOR),
@@ -47,9 +47,15 @@ generate_position_matrix_for_constaints(
 	).
 	
 /*
+ * generate_position_line_for_horizontal_constraints(HORIZONTAL_CONSTAINTS_LINE, POSITION_LINE).
+ * 
+ * Generate one line for position matrix that fit passed horizontal constaints line.
+ * 
+ * @input-param HORIZONTAL_CONSTAINTS_LINE - line of horizontal constaints.
+ * @output-param POSITION_LINE - position line that fit passed horizontal constaints.
  */
-generate_position_for_line([CONSTRAINT_LINE_HEAD | CONSTRAINT_LINE_TAIL], POSITION_LINE) :- 
-	do_generate_position_for_line(CONSTRAINT_LINE_HEAD, CONSTRAINT_LINE_TAIL, 0, POSITION_LINE).
+generate_position_line_for_horizontal_constraints([HORIZONTAL_CONSTAINTS_LINE_HEAD | HORIZONTAL_CONSTAINTS_LINE_TAIL], POSITION_LINE) :- 
+	do_generate_position_for_line(HORIZONTAL_CONSTAINTS_LINE_HEAD, HORIZONTAL_CONSTAINTS_LINE_TAIL, 0, POSITION_LINE).
 
 /*
  */
