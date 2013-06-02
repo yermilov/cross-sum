@@ -49,7 +49,7 @@ generate_position_matrix_for_constaints(
 /*
  * generate_position_line_for_horizontal_constraints(HORIZONTAL_CONSTAINTS_LINE, POSITION_LINE).
  * 
- * Generate one line for position matrix that fit passed horizontal constaints line.
+ * Generate line for position matrix that fit passed horizontal constaints line.
  * 
  * @input-param HORIZONTAL_CONSTAINTS_LINE - line of horizontal constaints.
  * @output-param POSITION_LINE - position line that fit passed horizontal constaints.
@@ -85,7 +85,7 @@ do_generate_position_line_for_horizontal_constraints(NEEDED_SUM, [HORIZONTAL_CON
 /*
  * generate_position_sequence(NEEDED_SUM, SEQUENCE_SIZE, POSITION_SEQUENCE).
  *
- * Generate one number sequence for position line that fit passed sum and size constaints.
+ * Generate number sequence for position line that fit passed sum and size constaints.
  *
  * If possible, take prepared information about possible sequnces (for example 3 = _ + _ is definitely 2 possibilities (either 3 = 1 + 2 or 3 = 2 + 1) from 72.
  * Otherwise trace over all possible number combinations without repetitions, until get needed sum.
@@ -124,17 +124,17 @@ generate_position_sequence(35, 5, POSITION_SEQUENCE) :- !, generate_prepared_pos
 generate_position_sequence(40, 7, POSITION_SEQUENCE) :- !, generate_prepared_position_sequence(40, 7, POSITION_SEQUENCE).
 generate_position_sequence(45, 9, POSITION_SEQUENCE) :- !, generate_prepared_position_sequence(45, 9, POSITION_SEQUENCE).
 
-generate_position_sequence(-1, SEQUENCE_SIZE, POSITION_SEQUENCE) :- !, generate_ordered_combination(SEQUENCE_SIZE, POSITION_SEQUENCE).
+generate_position_sequence(-1, SEQUENCE_SIZE, POSITION_SEQUENCE) :- !, generate_combination(SEQUENCE_SIZE, POSITION_SEQUENCE).
 
 generate_position_sequence(NEEDED_SUM, SEQUENCE_SIZE, POSITION_SEQUENCE) :- 
 	format("WARN : DON'T KNOW COMMUTATIONS FOR SEQUENCE WITH SUM ~w OF ~w ELEMENTS~n", [NEEDED_SUM, SEQUENCE_SIZE]),
-	generate_ordered_combination(SEQUENCE_SIZE, POSITION_SEQUENCE),
+	generate_combination(SEQUENCE_SIZE, POSITION_SEQUENCE),
 	sum_of_list(POSITION_SEQUENCE, NEEDED_SUM).
 	
 /*
  * generate_prepared_position_sequence(NEEDED_SUM, SEQUENCE_SIZE, POSITION_SEQUENCE).
  *
- * Takes one number sequence for position line that fit passed sum and size constaints from prepared information.
+ * Takes number sequence for position line that fit passed sum and size constaints from prepared information.
  *
  * @input-param NEEDED_SUM - needed sum of numbers.
  * @input-param SEQUENCE_SIZE - possible count of numbers, that can be used to fit needed sum.
@@ -248,8 +248,15 @@ generate_prepared_position_sequence(40, 7, POSITION_SEQUENCE) :- generate_commut
 generate_prepared_position_sequence(45, 9, POSITION_SEQUENCE) :- generate_commutation([1,2,3,4,5,6,7,8,9], 9, POSITION_SEQUENCE).
 
 /*
+ * generate_combination(COMBINATION_SIZE, COMBINATION).
+ *
+ * Generate combination of numbers with passed size and without repetitions.
+ *
+ * @input-param COMBINATION_SIZE - count of numbers, that can be used.
+ * @output-param COMBINATION - number combintaion that has passed count of numbers and has no duplicates.
  */
-generate_ordered_combination(COMBINATION_SIZE, COMBINATION) :- do_combinate([1,2,3,4,5,6,7,8,9], COMBINATION_SIZE, COMBINATION).
+
+generate_combination(COMBINATION_SIZE, COMBINATION) :- do_combinate([1,2,3,4,5,6,7,8,9], COMBINATION_SIZE, COMBINATION).
 
 /*
  */
