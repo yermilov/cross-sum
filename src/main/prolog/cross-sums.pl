@@ -280,15 +280,23 @@ generate_commutation(COMMUTATION_ELEMENTS, COMMUTATION_SIZE, COMMUTATION) :- com
 combinate_numbers(_, 0, []).
  
 combinate_numbers(COMBINATION_ELEMENTS, COMBINATION_SIZE, [ COMBINATION_HEAD | COMBINATION_TAIL ]) :- 
-	generate_head(COMBINATION_ELEMENTS, COMBINATION_HEAD),
+	take_one_element(COMBINATION_ELEMENTS, COMBINATION_HEAD),
 	remove_element(COMBINATION_ELEMENTS, COMBINATION_HEAD, NEW_COMBINATION_ELEMENTS),
 	NEW_COMBINATION_SIZE is COMBINATION_SIZE - 1,
 	combinate_numbers(NEW_COMBINATION_ELEMENTS, NEW_COMBINATION_SIZE, COMBINATION_TAIL).
 	
 /*
+ * take_one_element(LIST, ONE_ELEMENT).
+ * 
+ * Takes one element from list.
+ *
+ * During backtracing return all list elemtns in raw.
+ *
+ * @input-param LIST - some list of elements.
+ * @output-param ONE_ELEMENT - one element from passed list.
  */
-generate_head([ COMBINATION_ELEMENTS_HEAD | _ ], COMBINATION_ELEMENTS_HEAD).
-generate_head([ _ | COMBINATION_ELEMENTS_TAIL ], COMBINATION_HEAD) :- generate_head(COMBINATION_ELEMENTS_TAIL, COMBINATION_HEAD).
+take_one_element([HEAD | _], HEAD).
+take_one_element([_ | TAIL], ONE_ELEMENT) :- take_one_element(TAIL, ONE_ELEMENT).
 
 /*
  */
