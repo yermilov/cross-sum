@@ -55,23 +55,31 @@ generate_position_matrix_for_constaints(
  * @output-param POSITION_LINE - position line that fit passed horizontal constaints.
  */
 generate_position_line_for_horizontal_constraints([HORIZONTAL_CONSTAINTS_LINE_HEAD | HORIZONTAL_CONSTAINTS_LINE_TAIL], POSITION_LINE) :- 
-	do_generate_position_for_line(HORIZONTAL_CONSTAINTS_LINE_HEAD, HORIZONTAL_CONSTAINTS_LINE_TAIL, 0, POSITION_LINE).
+	do_generate_position_line_for_horizontal_constraints(HORIZONTAL_CONSTAINTS_LINE_HEAD, HORIZONTAL_CONSTAINTS_LINE_TAIL, 0, POSITION_LINE).
 
 /*
+ * do_generate_position_line_for_horizontal_constraints(NEEDED_SUM, HORIZONTAL_CONSTAINTS_LINE, SEQUENCE_SIZE, POSITION_LINE).
+ *
+ * Private worker for @goal generate_position_line_for_horizontal_constraints.
+ *
+ * @input-param NEEDED_SUM - lates constaint, sum of numbers that is currently need to be collected.
+ * @input-param HORIZONTAL_CONSTAINTS_LINE - line of horizontal constaints.
+ * @input-param SEQUENCE_SIZE - count of numbers, that can be used to fit latest constaint.
+ * @output-param POSITION_LINE - position line that fit passed horizontal constaints.
  */
-do_generate_position_for_line(NEEDED_SUM, [], SEQUENCE_SIZE, POSITION_SEQUENCE) :- 
+do_generate_position_line_for_horizontal_constraints(NEEDED_SUM, [], SEQUENCE_SIZE, POSITION_SEQUENCE) :- 
 	generate_position_for_sequence(NEEDED_SUM, SEQUENCE_SIZE, POSITION_SEQUENCE).
 	
-do_generate_position_for_line(NEEDED_SUM, [CONSTRAINT_LINE_HEAD | CONSTRAINT_LINE_TAIL], SEQUENCE_SIZE, POSITION_LINE ) :- 
-	CONSTRAINT_LINE_HEAD = 0,
+do_generate_position_line_for_horizontal_constraints(NEEDED_SUM, [HORIZONTAL_CONSTAINTS_LINE_HEAD | HORIZONTAL_CONSTAINTS_LINE_TAIL], SEQUENCE_SIZE, POSITION_LINE ) :- 
+	HORIZONTAL_CONSTAINTS_LINE_HEAD = 0,
 	NEW_SEQUENCE_SIZE is SEQUENCE_SIZE + 1,
-	do_generate_position_for_line(NEEDED_SUM, CONSTRAINT_LINE_TAIL, NEW_SEQUENCE_SIZE, POSITION_LINE).
+	do_generate_position_line_for_horizontal_constraints(NEEDED_SUM, HORIZONTAL_CONSTAINTS_LINE_TAIL, NEW_SEQUENCE_SIZE, POSITION_LINE).
 	
-do_generate_position_for_line(NEEDED_SUM, [CONSTRAINT_LINE_HEAD | CONSTRAINT_LINE_TAIL], SEQUENCE_SIZE, POSITION_LINE) :- 
-	CONSTRAINT_LINE_HEAD =\= 0,
+do_generate_position_line_for_horizontal_constraints(NEEDED_SUM, [HORIZONTAL_CONSTAINTS_LINE_HEAD | HORIZONTAL_CONSTAINTS_LINE_TAIL], SEQUENCE_SIZE, POSITION_LINE) :- 
+	HORIZONTAL_CONSTAINTS_LINE_HEAD =\= 0,
 	generate_position_for_sequence(NEEDED_SUM, SEQUENCE_SIZE, POSITION_SEQUENCE),
 	append_element(POSITION_SEQUENCE, 0, POSITION_LINE_HEAD),
-	do_generate_position_for_line(CONSTRAINT_LINE_HEAD, CONSTRAINT_LINE_TAIL, 0, POSITION_LINE_TAIL),
+	do_generate_position_line_for_horizontal_constraints(HORIZONTAL_CONSTAINTS_LINE_HEAD, HORIZONTAL_CONSTAINTS_LINE_TAIL, 0, POSITION_LINE_TAIL),
 	append(POSITION_LINE_HEAD, POSITION_LINE_TAIL, POSITION_LINE).
 
 /*
