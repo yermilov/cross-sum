@@ -38,7 +38,7 @@ generate_position_matrix_for_constaints(
 	generate_position_line_for_horizontal_constraints(HORIZONTAL_CONSTAINTS_MATRIX_HEADLINE, POSITION_MATRIX_HEADLINE),
 	
 	append_element(POSITION_MATRIX_ACCUMULATOR, POSITION_MATRIX_HEADLINE, NEW_POSITION_MATRIX_ACCUMULATOR),
-	fit_vertical_constraints(VERTICAL_CONSTAINTS_MATRIX, NEW_POSITION_MATRIX_ACCUMULATOR),
+	is_fit_vertical_constraints(VERTICAL_CONSTAINTS_MATRIX, NEW_POSITION_MATRIX_ACCUMULATOR),
 	
 	format('INFO : POSITION FOR ~w PROCESSED LINES:~n ~w~n', [LINE_INDEX, NEW_POSITION_MATRIX_ACCUMULATOR]),
 	NEW_LINE_INDEX is LINE_INDEX + 1,
@@ -297,28 +297,48 @@ combinate_numbers(COMBINATION_ELEMENTS, COMBINATION_SIZE, [ COMBINATION_HEAD | C
  */
 take_one_element([HEAD | _], HEAD).
 take_one_element([_ | TAIL], ONE_ELEMENT) :- take_one_element(TAIL, ONE_ELEMENT).
-
-/*
- */
-sum_of_list([], 0).
-
-sum_of_list([ LIST_HEAD | LIST_TAIL ], SUM) :- sum_of_list(LIST_TAIL, SUM_TAIL), SUM is SUM_TAIL + LIST_HEAD.
 	
 /*
+ * is_fit_vertical_constraints(VERTICAL_CONSTAINTS_MATRIX, POSITION_MATRIX).
+ *
+ * Succeed if passed POSITION_MATRIX fit passed VERTICAL_CONSTAINTS_MATRIX.
+ *
+ * @input-param VERTICAL_CONSTAINTS_MATRIX - matrix of vertical constaints.
+ * @input-param POSITION_MATRIX - answer matrix for cross-sum game.
  */
-fit_vertical_constraints([[_ | Y_CONSTRAINTS_HEAD] | Y_CONSTRAINTS_TAIL], POSITION) :- 
-	generate_empty_list_list(Y_CONSTRAINTS_HEAD, EMPTY_LIST_LIST),
-	is_fit_vertical_constraints(Y_CONSTRAINTS_TAIL, POSITION, Y_CONSTRAINTS_HEAD, EMPTY_LIST_LIST, Y_CONSTRAINTS_HEAD).
+is_fit_vertical_constraints( [ [_ | VERTICAL_CONSTAINTS_MATRIX_HEADLIST_TAIL] | VERTICAL_CONSTAINTS_MATRIX_TAILISTS ], POSITION_MATRIX) :- 
+	generate_empty_list_list(VERTICAL_CONSTAINTS_MATRIX_HEADLIST_TAIL, EMPTY_LIST_LIST),
+	do_is_fit_vertical_constraints(
+		VERTICAL_CONSTAINTS_MATRIX_TAILISTS, POSITION_MATRIX, VERTICAL_CONSTAINTS_MATRIX_HEADLIST_TAIL, EMPTY_LIST_LIST, VERTICAL_CONSTAINTS_MATRIX_HEADLIST_TAIL
+	).
 
 /*
+ * do_is_fit_vertical_constraints(VERTICAL_CONSTAINTS_MATRIX, POSITION_MATRIX, NEEDED_SUM_LIST, USED_NUMBERS_LIST, SKIP_LIST).
+ *
+ * Private worker for @goal is_fit_vertical_constraints.
+ *
+ * @input-param VERTICAL_CONSTAINTS_MATRIX - matrix of vertical constaints.
+ * @input-param POSITION_MATRIX - answer matrix for cross-sum game.
+ * @input-param NEEDED_SUM_LIST - list of needed sum constraint for each column.
+ * @input-param USED_NUMBERS_LIST - list of list of numbers that was used for each column in position matrix.
+ * @input-param SKIP_LIST - list of flags (positive number is false, negative is true, zero is undefined), that signal if needed sum constaint should be checked for each column.
  */
-is_fit_vertical_constraints([], [], POINTS_LEFT_LIST, _, SKIP_LIST) :- !, all_zeros(POINTS_LEFT_LIST, SKIP_LIST).
+do_is_fit_vertical_constraints([], [], NEEDED_SUM_LIST, _, SKIP_LIST) :- !, all_zeros(NEEDED_SUM_LIST, SKIP_LIST).
  
-is_fit_vertical_constraints([CONSTRAINTS_HEAD | _], [], POINTS_LEFT_LIST, _, SKIP_LIST) :- !, check_last_available_vertical_constraints(CONSTRAINTS_HEAD, POINTS_LEFT_LIST, SKIP_LIST).
+do_is_fit_vertical_constraints([VERTICAL_CONSTRAINTS_MATRIX_HEADLINE | _], [], NEEDED_SUM_LIST, _, SKIP_LIST) :- 
+	!, check_last_available_vertical_constraints(VERTICAL_CONSTRAINTS_MATRIX_HEADLINE, NEEDED_SUM_LIST, SKIP_LIST).
 
-is_fit_vertical_constraints([CONSTRAINTS_HEAD | CONSTRAINTS_TAIL], [POSITION_HEAD | POSITION_TAIL], POINTS_LEFT_LIST, USED_NUMBERS_LIST, SKIP_LIST) :- 
-	process_vertical_constraints(CONSTRAINTS_HEAD, POSITION_HEAD, POINTS_LEFT_LIST, USED_NUMBERS_LIST, SKIP_LIST, NEW_POINTS_LEFT_LIST, NEW_USED_NUMBERS_LIST, NEW_SKIP_LIST),
-	is_fit_vertical_constraints(CONSTRAINTS_TAIL, POSITION_TAIL, NEW_POINTS_LEFT_LIST, NEW_USED_NUMBERS_LIST, NEW_SKIP_LIST).
+do_is_fit_vertical_constraints(
+		[VERTICAL_CONSTRAINTS_MATRIX_HEADLINE | VERTICAL_CONSTRAINTS_MATRIX_TAILLINES], 
+		[POSITION_HEAD | POSITION_TAIL], 
+		NEEDED_SUM_LIST, 
+		USED_NUMBERS_LIST, 
+		SKIP_LIST
+	) :- 
+	process_vertical_constraints(
+		VERTICAL_CONSTRAINTS_MATRIX_HEADLINE, POSITION_HEAD, NEEDED_SUM_LIST, USED_NUMBERS_LIST, SKIP_LIST, NEW_NEEDED_SUM_LIST, NEW_USED_NUMBERS_LIST, NEW_SKIP_LIST
+	),
+	do_is_fit_vertical_constraints(VERTICAL_CONSTRAINTS_MATRIX_TAILLINES, POSITION_TAIL, NEW_NEEDED_SUM_LIST, NEW_USED_NUMBERS_LIST, NEW_SKIP_LIST).
 	
 /*
  */
@@ -453,3 +473,9 @@ remove_element([LIST_HEAD | LIST_TAIL], ELEMENT, [LIST_HEAD | NEW_LIST_TAIL]) :-
 append_element([], ELEMENT, [ELEMENT]).
 
 append_element([LIST_HEAD | LIST_TAIL], ELEMENT, [LIST_HEAD | APPEND_TAIL]) :- append_element(LIST_TAIL, ELEMENT, APPEND_TAIL).
+
+/*
+ */
+sum_of_list([], 0).
+
+sum_of_list([ LIST_HEAD | LIST_TAIL ], SUM) :- sum_of_list(LIST_TAIL, SUM_TAIL), SUM is SUM_TAIL + LIST_HEAD.
