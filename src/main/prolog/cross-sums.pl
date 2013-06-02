@@ -494,6 +494,12 @@ generate_empty_list_list([], []).
 generate_empty_list_list([_ | SOURCE_LIST_TAIL], [[] | EMPTY_LIST_LIST_TAIL]) :- generate_empty_list_list(SOURCE_LIST_TAIL, EMPTY_LIST_LIST_TAIL).
 
 /*
+ * all_zeros(LIST, SKIP_LIST).
+ * 
+ * Succeed if, and only if, for every element of LIST it is equal to zero or corresponding element in SKIP_LIST is non-positive.
+ *
+ * @input-param LIST - list of element to check.
+ * @input-param SKIP_LIST - control for what element check is non-applicable.
  */
 all_zeros([], []).
 
@@ -502,20 +508,27 @@ all_zeros([0 | TAIL], [SKIP_LIST_HEAD | SKIP_LIST_TAIL]) :- SKIP_LIST_HEAD > 0, 
 all_zeros([_ | TAIL], [SKIP_LIST_HEAD | SKIP_LIST_TAIL]) :- SKIP_LIST_HEAD =< 0, all_zeros(TAIL, SKIP_LIST_TAIL).
 
 /*
+ * not_contains(ELEMENT, LIST).
+ * 
+ * Succeed if, and only if, LIST does not contain ELEMENT.
+ *
+ * @input-param ELEMENT.
+ * @input-param LIST.
  */
 not_contains(_, []).
 
 not_contains(ELEMENT, [ELEMENT | _]) :- false.
 
 not_contains(ELEMENT, [LIST_HEAD | LIST_TAIL]) :- LIST_HEAD =\= ELEMENT, not_contains(ELEMENT, LIST_TAIL).
-
-/*
- */
-length_of([], 0).
-
-length_of([_ | LIST_TAIL], LENGTH) :- length_of(LIST_TAIL, LENGTH_WITHOUT_HEAD), LENGTH is LENGTH_WITHOUT_HEAD + 1.
  
 /*
+ * remove_element(LIST, ELEMENT, NEW_LIST).
+ * 
+ * Removes ELEMENT from LIST and put result into NEW_LIST.
+ *
+ * @input-param LIST.
+ * @input-param ELEMENT.
+ * @output-param NEW_LIST.
  */
 remove_element([], _, []).
 
@@ -524,13 +537,26 @@ remove_element([ELEMENT | LIST_TAIL], ELEMENT, NEW_LIST_TAIL) :- remove_element(
 remove_element([LIST_HEAD | LIST_TAIL], ELEMENT, [LIST_HEAD | NEW_LIST_TAIL]) :- LIST_HEAD =\= ELEMENT, remove_element(LIST_TAIL, ELEMENT, NEW_LIST_TAIL).
 
 /*
+ * append_element(LIST, ELEMENT, NEW_LIST).
+ * 
+ * Adds ELEMENT to LIST and put result into NEW_LIST.
+ *
+ * @input-param LIST.
+ * @input-param ELEMENT.
+ * @output-param NEW_LIST.
  */
 append_element([], ELEMENT, [ELEMENT]).
 
-append_element([LIST_HEAD | LIST_TAIL], ELEMENT, [LIST_HEAD | APPEND_TAIL]) :- append_element(LIST_TAIL, ELEMENT, APPEND_TAIL).
+append_element([LIST_HEAD | LIST_TAIL], ELEMENT, [LIST_HEAD | NEW_LIST_TAIL]) :- append_element(LIST_TAIL, ELEMENT, NEW_LIST_TAIL).
 
 /*
+ * sum_of_list(LIST, SUM).
+ * 
+ * Succeed if, and only if, sum of LIST elements is SUM.
+ *
+ * @input-param LIST.
+ * @input-param SUM.
  */
 sum_of_list([], 0).
 
-sum_of_list([ LIST_HEAD | LIST_TAIL ], SUM) :- sum_of_list(LIST_TAIL, SUM_TAIL), SUM is SUM_TAIL + LIST_HEAD.
+sum_of_list([LIST_HEAD | LIST_TAIL], SUM) :- sum_of_list(LIST_TAIL, SUM_TAIL), SUM is SUM_TAIL + LIST_HEAD.
