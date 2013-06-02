@@ -255,7 +255,7 @@ generate_prepared_position_sequence(45, 9, POSITION_SEQUENCE) :- generate_commut
  * @input-param COMBINATION_SIZE - count of numbers, that can be used.
  * @output-param COMBINATION - number combintaion that has passed count of numbers and has no duplicates.
  */
-generate_combination(COMBINATION_SIZE, COMBINATION) :- do_combinate([1,2,3,4,5,6,7,8,9], COMBINATION_SIZE, COMBINATION).
+generate_combination(COMBINATION_SIZE, COMBINATION) :- combinate_numbers([1,2,3,4,5,6,7,8,9], COMBINATION_SIZE, COMBINATION).
 
 /*
  * generate_commutation(COMMUTATION_ELEMENTS, COMMUTATION_SIZE, COMMUTATION).
@@ -263,20 +263,27 @@ generate_combination(COMBINATION_SIZE, COMBINATION) :- do_combinate([1,2,3,4,5,6
  * Generate communtation using passed numbers.
  *
  * @input-param COMMUTATION_ELEMENTS - numbers that should be used in generated commutation.
- * @input-param COMMUTATION_SIZE - count of numbers, that can be used in one commutation.
+ * @input-param COMMUTATION_SIZE - count of numbers, that can be used in commutation.
  * @output-param COMMUTATION - number commutation that consist of passed count of passed numbers and has no duplicates.
  */
-generate_commutation(COMMUTATION_ELEMENTS, COMMUTATION_SIZE, COMMUTATION) :- do_combinate(COMMUTATION_ELEMENTS, COMMUTATION_SIZE, COMMUTATION).
+generate_commutation(COMMUTATION_ELEMENTS, COMMUTATION_SIZE, COMMUTATION) :- combinate_numbers(COMMUTATION_ELEMENTS, COMMUTATION_SIZE, COMMUTATION).
 
 /*
+ * combinate_numbers(COMBINATION_ELEMENTS, COMBINATION_SIZE, COMBINATION).
+ *
+ * Generate combination of size COMBINATION_SIZE using numbers from COMBINATION_ELEMENTS.
+ *
+ * @input-param COMBINATION_ELEMENTS - numbers that should be used in generated combination.
+ * @input-param COMBINATION_SIZE - count of numbers, that can be used in combination.
+ * @output-param COMBINATION - number combination that consist of passed count of passed numbers and has no duplicates.
  */
-do_combinate(_, 0, []).
+combinate_numbers(_, 0, []).
  
-do_combinate(COMBINATION_ELEMENTS, SIZE, [ COMBINATION_HEAD | COMBINATION_TAIL ]) :- 
+combinate_numbers(COMBINATION_ELEMENTS, COMBINATION_SIZE, [ COMBINATION_HEAD | COMBINATION_TAIL ]) :- 
 	generate_head(COMBINATION_ELEMENTS, COMBINATION_HEAD),
-	remove_element(COMBINATION_ELEMENTS, COMBINATION_HEAD, LEFT_COMBINATION_ELEMENTS),
-	NEW_SIZE is SIZE - 1,
-	do_combinate(LEFT_COMBINATION_ELEMENTS, NEW_SIZE, COMBINATION_TAIL).
+	remove_element(COMBINATION_ELEMENTS, COMBINATION_HEAD, NEW_COMBINATION_ELEMENTS),
+	NEW_COMBINATION_SIZE is COMBINATION_SIZE - 1,
+	combinate_numbers(NEW_COMBINATION_ELEMENTS, NEW_COMBINATION_SIZE, COMBINATION_TAIL).
 	
 /*
  */
