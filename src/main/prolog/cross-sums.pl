@@ -325,8 +325,8 @@ is_fit_vertical_constraints( [ [_ | VERTICAL_CONSTAINTS_MATRIX_HEADLIST_TAIL] | 
  */
 do_is_fit_vertical_constraints([], [], NEEDED_SUM_LIST, _, SKIP_LIST) :- !, all_zeros(NEEDED_SUM_LIST, SKIP_LIST).
  
-do_is_fit_vertical_constraints([VERTICAL_CONSTRAINTS_MATRIX_HEADLINE | _], [], NEEDED_SUM_LIST, _, SKIP_LIST) :- 
-	!, check_last_available_vertical_constraints(VERTICAL_CONSTRAINTS_MATRIX_HEADLINE, NEEDED_SUM_LIST, SKIP_LIST).
+do_is_fit_vertical_constraints([ [_ | VERTICAL_CONSTRAINTS_MATRIX_HEADLINE_TAIL] | _], [], NEEDED_SUM_LIST, _, SKIP_LIST) :- 
+	!, process_last_available_line_to_check_vertical_constraints(VERTICAL_CONSTRAINTS_MATRIX_HEADLINE_TAIL, NEEDED_SUM_LIST, SKIP_LIST).
 
 do_is_fit_vertical_constraints(
 		[ [_ | VERTICAL_CONSTRAINTS_MATRIX_HEADLINE_TAIL] | VERTICAL_CONSTRAINTS_MATRIX_TAILLINES], 
@@ -345,7 +345,7 @@ do_is_fit_vertical_constraints(
  *		VERTICAL_CONSTRAINTS_LINE, POSITION_LINE, NEEDED_SUM_LIST, USED_NUMBERS_LIST, SKIP_LIST, NEW_NEEDED_SUM_LIST, NEW_USED_NUMBERS_LIST, NEW_SKIP_LIST
  * )
  *
- * Do processing of one line of vertical constraint: takes NEEDED_SUM_LIST, USED_NUMBERS_LIST, SKIP_LIST from previous line 
+ * Do processing of one line to check if it fit vertical constraint: takes NEEDED_SUM_LIST, USED_NUMBERS_LIST, SKIP_LIST from previous line 
  * and calculates NEW_NEEDED_SUM_LIST, NEW_USED_NUMBERS_LIST, NEW_SKIP_LIST for this line.
  *
  * @input-param VERTICAL_CONSTRAINTS_LINE - line of vertical constaints matrix.
@@ -434,37 +434,64 @@ process_one_line_to_check_vertical_constraints(
 	).
 	
 /*
+ * process_last_available_line_to_check_vertical_constraints(VERTICAL_CONSTRAINTS_LINE, NEEDED_SUM_LIST, SKIP_LIST).
+ *
+ * Do processing of last currently available line to check if it fit vertical constraint.
+ * As further lines are not calculated yet, checks only if it fit needed sum constaints.
+ * Succeed if it fits.
+ *
+ * @input-param VERTICAL_CONSTRAINTS_LINE - line of vertical constaints matrix.
+ * @input-param NEEDED_SUM_LIST - list of needed sum constraint for each column from previous line.
+ * @input-param SKIP_LIST - list of flags (positive number is false, negative is true, zero is undefined), 
+ * 							that signal if needed sum constaint should be checked for each column from previous line.
  */
-check_last_available_vertical_constraints([_ | CONSTRAINTS_LINE_TAIL], POINTS_LEFT_LIST, SKIP_LIST) :-
-	do_check_last_available_vertical_constraints(CONSTRAINTS_LINE_TAIL, POINTS_LEFT_LIST, SKIP_LIST).
-	
+process_last_available_line_to_check_vertical_constraints([], _, _).
+
+process_last_available_line_to_check_vertical_constraints(
+		[VERTICAL_CONSTRAINTS_LINE_HEAD | VERTICAL_CONSTRAINTS_LINE_TAIL], 
+		[NEEDED_SUM_LIST_HEAD | NEEDED_SUM_LIST_TAIL], 
+		[SKIP_LIST_HEAD | SKIP_LIST_TAIL]
+	) :- 
+ 	VERTICAL_CONSTRAINTS_LINE_HEAD =\= 0, SKIP_LIST_HEAD > 0,
+	NEEDED_SUM_LIST_HEAD = 0,
+	process_last_available_line_to_check_vertical_constraints(VERTICAL_CONSTRAINTS_LINE_TAIL, NEEDED_SUM_LIST_TAIL, SKIP_LIST_TAIL).
+
+process_last_available_line_to_check_vertical_constraints(
+		[VERTICAL_CONSTRAINTS_LINE_HEAD | VERTICAL_CONSTRAINTS_LINE_TAIL], 
+		[_ | NEEDED_SUM_LIST_TAIL], 
+		[SKIP_LIST_HEAD | SKIP_LIST_TAIL]
+	) :- 
+	VERTICAL_CONSTRAINTS_LINE_HEAD =\= 0, SKIP_LIST_HEAD =< 0,
+	process_last_available_line_to_check_vertical_constraints(VERTICAL_CONSTRAINTS_LINE_TAIL, NEEDED_SUM_LIST_TAIL, SKIP_LIST_TAIL).
+
+process_last_available_line_to_check_vertical_constraints(
+		[VERTICAL_CONSTRAINTS_LINE_HEAD | VERTICAL_CONSTRAINTS_LINE_TAIL], 
+		[NEEDED_SUM_LIST_HEAD | NEEDED_SUM_LIST_TAIL], 
+		[SKIP_LIST_HEAD | SKIP_LIST_TAIL]
+	) :- 
+	VERTICAL_CONSTRAINTS_LINE_HEAD = 0, SKIP_LIST_HEAD > 0,
+	NEEDED_SUM_LIST_HEAD >= 0,
+	process_last_available_line_to_check_vertical_constraints(VERTICAL_CONSTRAINTS_LINE_TAIL, NEEDED_SUM_LIST_TAIL, SKIP_LIST_TAIL).
+
+process_last_available_line_to_check_vertical_constraints(
+		[VERTICAL_CONSTRAINTS_LINE_HEAD | VERTICAL_CONSTRAINTS_LINE_TAIL], 
+		[_ | NEEDED_SUM_LIST_TAIL], 
+		[SKIP_LIST_HEAD | SKIP_LIST_TAIL]
+	) :- 
+	VERTICAL_CONSTRAINTS_LINE_HEAD = 0, SKIP_LIST_HEAD =< 0,
+	process_last_available_line_to_check_vertical_constraints(VERTICAL_CONSTRAINTS_LINE_TAIL, NEEDED_SUM_LIST_TAIL, SKIP_LIST_TAIL).
+
 /*
- */
-do_check_last_available_vertical_constraints([], _, _).
-
-do_check_last_available_vertical_constraints([CONSTRAINTS_LINE_HEAD | CONSTRAINTS_LINE_TAIL], [POINTS_LEFT_HEAD | POINTS_LEFT_TAIL], [SKIP_LIST_HEAD | SKIP_LIST_TAIL]) :- 
-	CONSTRAINTS_LINE_HEAD =\= 0, SKIP_LIST_HEAD > 0,
-	POINTS_LEFT_HEAD = 0,
-	do_check_last_available_vertical_constraints(CONSTRAINTS_LINE_TAIL, POINTS_LEFT_TAIL, SKIP_LIST_TAIL).
-
-do_check_last_available_vertical_constraints([CONSTRAINTS_LINE_HEAD | CONSTRAINTS_LINE_TAIL], [_ | POINTS_LEFT_TAIL], [SKIP_LIST_HEAD | SKIP_LIST_TAIL]) :- 
-	CONSTRAINTS_LINE_HEAD =\= 0, SKIP_LIST_HEAD =< 0,
-	do_check_last_available_vertical_constraints(CONSTRAINTS_LINE_TAIL, POINTS_LEFT_TAIL, SKIP_LIST_TAIL).
-
-do_check_last_available_vertical_constraints([CONSTRAINTS_LINE_HEAD | CONSTRAINTS_LINE_TAIL], [POINTS_LEFT_HEAD | POINTS_LEFT_TAIL], [SKIP_LIST_HEAD | SKIP_LIST_TAIL]) :- 
-	CONSTRAINTS_LINE_HEAD = 0, SKIP_LIST_HEAD > 0,
-	POINTS_LEFT_HEAD >= 0,
-	do_check_last_available_vertical_constraints(CONSTRAINTS_LINE_TAIL, POINTS_LEFT_TAIL, SKIP_LIST_TAIL).
-
-do_check_last_available_vertical_constraints([CONSTRAINTS_LINE_HEAD | CONSTRAINTS_LINE_TAIL], [_ | POINTS_LEFT_TAIL], [SKIP_LIST_HEAD | SKIP_LIST_TAIL]) :- 
-	CONSTRAINTS_LINE_HEAD = 0, SKIP_LIST_HEAD =< 0,
-	do_check_last_available_vertical_constraints(CONSTRAINTS_LINE_TAIL, POINTS_LEFT_TAIL, SKIP_LIST_TAIL).
-
-/*
+ * generate_empty_list_list(SOURCE_LIST, EMPTY_LIST_LIST).
+ *
+ * Generate list that contains as much empty lists as SOURCE_LIST has elements.
+ *
+ * @input-param SOURCE_LIST - used to get count of needed lists.
+ * @output-param EMPTY_LIST_LIST - list of empty lists.
  */
 generate_empty_list_list([], []).
 
-generate_empty_list_list([_ | TAIL], [[] | LIST]) :- generate_empty_list_list(TAIL, LIST).
+generate_empty_list_list([_ | SOURCE_LIST_TAIL], [[] | EMPTY_LIST_LIST_TAIL]) :- generate_empty_list_list(SOURCE_LIST_TAIL, EMPTY_LIST_LIST_TAIL).
 
 /*
  */
