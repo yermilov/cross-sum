@@ -255,10 +255,16 @@ generate_prepared_position_sequence(45, 9, POSITION_SEQUENCE) :- generate_commut
  * @input-param COMBINATION_SIZE - count of numbers, that can be used.
  * @output-param COMBINATION - number combintaion that has passed count of numbers and has no duplicates.
  */
-
 generate_combination(COMBINATION_SIZE, COMBINATION) :- do_combinate([1,2,3,4,5,6,7,8,9], COMBINATION_SIZE, COMBINATION).
 
 /*
+ * generate_commutation(COMMUTATION_ELEMENTS, COMMUTATION_SIZE, COMMUTATION).
+ *
+ * Generate communtation using passed numbers.
+ *
+ * @input-param COMMUTATION_ELEMENTS - numbers that should be used in generated commutation.
+ * @input-param COMMUTATION_SIZE - count of numbers, that can be used in one commutation.
+ * @output-param COMMUTATION - number commutation that consist of passed count of passed numbers and has no duplicates.
  */
 generate_commutation(COMMUTATION_ELEMENTS, COMMUTATION_SIZE, COMMUTATION) :- do_combinate(COMMUTATION_ELEMENTS, COMMUTATION_SIZE, COMMUTATION).
 
